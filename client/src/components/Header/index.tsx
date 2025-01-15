@@ -28,6 +28,7 @@ type Props = PropsFromRedux & {
   fetchState: { pending: boolean };
   user: User;
   skipButtonText: string;
+  pathname: string;
 };
 
 class Header extends React.Component<Props, { displayMenu: boolean }> {
@@ -79,10 +80,15 @@ class Header extends React.Component<Props, { displayMenu: boolean }> {
 
   render(): JSX.Element {
     const { displayMenu } = this.state;
-    const { examInProgress, fetchState, user, skipButtonText } = this.props;
+    const { examInProgress, fetchState, user, skipButtonText, pathname } =
+      this.props;
     return (
-      <header>
-        <a href='#content-start' className='skip-to-content-button'>
+      <header className='site-header'>
+        <a
+          href='#content-start'
+          className='skip-to-content-button'
+          data-playwright-test-label='header-skip-content'
+        >
           {skipButtonText}
         </a>
         {examInProgress ? (
@@ -92,6 +98,7 @@ class Header extends React.Component<Props, { displayMenu: boolean }> {
             displayMenu={displayMenu}
             fetchState={fetchState}
             hideMenu={this.hideMenu}
+            pathname={pathname}
             menuButtonRef={this.menuButtonRef}
             searchBarRef={this.searchBarRef}
             showMenu={this.showMenu}

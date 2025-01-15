@@ -9,7 +9,12 @@ const SearchBarOptimized = ({
   innerRef
 }: Pick<SearchBarProps, 'innerRef'>): JSX.Element => {
   const { t } = useTranslation();
-  const placeholder = t('search.placeholder');
+  // TODO: Refactor this fallback when all translation files are synced
+  const searchPlaceholder = t('search-bar:placeholder').startsWith(
+    'search.placeholder.'
+  )
+    ? t('search.placeholder')
+    : t('search-bar:placeholder');
   const searchUrl = searchPageUrl;
   const [value, setValue] = useState('');
   const inputElementRef = useRef<HTMLInputElement>(null);
@@ -19,6 +24,9 @@ const SearchBarOptimized = ({
     event.preventDefault();
     if (value && value.length > 1) {
       window.open(`${searchUrl}?query=${encodeURIComponent(value)}`, '_blank');
+      setValue('');
+      // Blur the input to remove the selection
+      inputElementRef.current?.blur();
     }
   };
   const onClick = () => {
@@ -29,16 +37,15 @@ const SearchBarOptimized = ({
   return (
     <div className='fcc_searchBar' data-testid='fcc_searchBar' ref={innerRef}>
       <div className='fcc_search_wrapper'>
-        <div className='ais-SearchBox' data-cy='ais-SearchBox'>
+        <div className='ais-SearchBox'>
           <form
             action=''
             className='ais-SearchBox-form'
-            data-cy='ais-SearchBox-form'
             onSubmit={onSubmit}
             role='search'
           >
             <label className='sr-only' htmlFor='ais-SearchBox-input'>
-              {t ? t('search.label') : ''}
+              {t('search.label')}
             </label>
             <input
               autoCapitalize='off'
@@ -48,7 +55,7 @@ const SearchBarOptimized = ({
               className='ais-SearchBox-input'
               maxLength={512}
               onChange={onChange}
-              placeholder={placeholder}
+              placeholder={searchPlaceholder}
               spellCheck='false'
               type='search'
               value={value}

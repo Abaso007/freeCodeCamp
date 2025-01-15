@@ -1,6 +1,8 @@
 import React from 'react';
 import YouTube from 'react-youtube';
-import envData from '../../../../../config/env.json';
+
+import Loader from '../../../components/helpers/loader';
+import envData from '../../../../config/env.json';
 import type { BilibiliIds, VideoLocaleIds } from '../../../redux/prop-types';
 
 // TODO: pull these types from all-langs
@@ -47,7 +49,13 @@ function VideoPlayer({
   }
 
   return (
-    <>
+    <div className='video-wrapper'>
+      {!videoIsLoaded ? (
+        <div className='video-placeholder-loader'>
+          <Loader />
+        </div>
+      ) : null}
+
       {bilibiliSrc ? (
         <iframe
           frameBorder='no'
@@ -71,7 +79,7 @@ function VideoPlayer({
           videoId={videoId}
         />
       )}
-    </>
+    </div>
   );
 }
 
